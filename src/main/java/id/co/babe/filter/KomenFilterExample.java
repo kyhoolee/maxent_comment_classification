@@ -9,7 +9,7 @@ import id.co.babe.filter.model.Komen;
 import id.co.babe.filter.model.KomenDataset;
 import id.co.babe.util.Util;
 
-public class KomenFilter {
+public class KomenFilterExample {
 
 	public static void main(String[] args) {
 		// ruleFilter();
