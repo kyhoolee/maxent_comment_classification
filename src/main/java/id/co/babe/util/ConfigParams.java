@@ -11,6 +11,7 @@ public class ConfigParams {
     public static String sql_database = "komen_filter_";
     public static String sql_username = "root_";
     public static String sql_password = "maingames_";
+    public static String http_port = "8888";
 	
 	private static Properties properties = null;
 	
@@ -25,6 +26,8 @@ public class ConfigParams {
 				sql_database = properties.getProperty("sql_database");
 				sql_username = properties.getProperty("sql_username");
 				sql_password = properties.getProperty("sql_password");
+				
+				http_port = properties.getProperty("http_port");
 				
 				System.out.println(sql_host + " " + sql_port + " " + sql_database + " " + sql_username + " " + sql_password);
 			} catch (Exception e) {

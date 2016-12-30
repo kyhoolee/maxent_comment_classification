@@ -102,7 +102,9 @@ public class KomenFilterExample {
 
 		for (int i = 0; i < data.train.size(); i++) {
 			Komen k = data.train.get(i);
+			
 			String res = ruleInference(k.content);
+			
 			if (k.label == Komen.SPAM && res == Komen.NORMAL) {
 				falsePosList.add(RuleFilter.printRule(k.content));//
 			}
