@@ -5,16 +5,20 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TextfileIO {
 	public static final String SOURCE = "/home/mainspring/tutorial/learn/text-classifier/data/komen";
-	
+	public static final String SOURCE_KOMEN = "/home/mainspring/tutorial/learn/text-classifier/data_komen/";
+
 	public static void main(String[] args) {
 		//checkRegex();
 		//preProcessSpam("/home/mainspring/tutorial/learn/text-classifier/data/spam_output.txt");
-		preProcessCsv("/home/mainspring/tutorial/learn/text-classifier/data/spam_unique.txt");
+		//preProcessCsv("/home/mainspring/tutorial/learn/text-classifier/data/spam_unique.txt");
+		preProcessStopwords();
 	}
 	
 	public static void checkRegex() {
@@ -36,10 +40,49 @@ public class TextfileIO {
 	}
 	
 	public static void preProcess() {
-		for(int i = 1; i < 11; i ++) {
-			List<String> data = readFile(SOURCE + "/komen" + i + ".csv");
-			writeFile(SOURCE + "/l_" + "komen" + i + ".txt", data);
+		List<String> data = readFile(SOURCE_KOMEN + "Comment(Bad).txt");
+		data = removeDoubleQuote(data);
+		writeFile(SOURCE_KOMEN + "bad_komen.txt", data);
+		
+		data = readFile(SOURCE_KOMEN + "Comment(Good).txt");
+		data = removeDoubleQuote(data);
+		writeFile(SOURCE_KOMEN + "good_komen.txt", data);
+	}
+	
+	public static void preProcessStopwords() {
+		List<String> data = readFile(SOURCE_KOMEN + "stopwords.txt");
+		data = removeComma(data);
+		writeFile(SOURCE_KOMEN + "stopword.txt", data);
+	}
+	
+	public static List<String> removeComma(List<String> data) {
+		List<String> result = new ArrayList<>();
+		for(String line : data) {
+			line = line.trim();
+			line = line.replace(",", "");
+			result.add(line);
 		}
+		
+		return result;
+	}
+	
+	public static List<String> removeDoubleQuote(List<String> data) {
+		List<String> result = new ArrayList<>();
+		for(String line : data) {
+			line = line.trim();
+			if(line != null && line.length() > 0) {
+				if(line.startsWith("\""))
+					line = line.substring(1, line.length());
+				if(line.endsWith("\""))
+					line = line.substring(0, line.length() - 1);
+				
+				result.add(line);
+			}
+			
+			
+		}
+		
+		return result;
 	}
 	
 	public static void preProcessSample() {
@@ -60,6 +103,36 @@ public class TextfileIO {
 			
 		}
 		writeFile(filePath + ".1" , data);
+	}
+	
+	public static List<String> readFile(InputStream is) {
+		List<String> result = new ArrayList<>();
+		
+		BufferedReader br = null;
+		FileReader fr = null;
+
+		try {
+			br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				result.add(line);
+				
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)
+					br.close();
+				if (fr != null)
+					fr.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 	
 	public static List<String> readFile(String filePath) {

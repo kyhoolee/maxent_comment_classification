@@ -27,6 +27,7 @@ public class KomenDataset {
 		for(int i = 0 ; i < data.size() ; i ++) {
 			double rand = Math.random();
 			Komen e = data.get(i);
+			
 			if(train_prob > rand) {
 				train.add(e);
 				if(e.label == Komen.SPAM) {

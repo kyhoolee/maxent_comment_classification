@@ -12,7 +12,7 @@ public class RuleFilter {
 	
 
 	public static final Set<String> blackWords = new HashSet<String>(Arrays.asList(
-			"service", "sofa", "servis", 
+			"service", "sofa", "servis", "code", "kode", "facebook", "promo",
 			
 			"obat", "perangsang",  "kuat",
 			"sex", "sedia", "penis", "seks", "adult", "onani", "syahwat", "bokep", "khusus",
@@ -23,27 +23,22 @@ public class RuleFilter {
 			"0813", "0851", "0856", "0857", "0858","0821","0812", "0878", "0853", "0852",
 			"0818", "0877","081", "0822", "0811", "0877",
 			
-			"fb.com", "bbm", "bb", "pin:", "idline"
+			"fb.com", "line", "p://", "www"
 			
 			));
 	
 	
 	
 	public static String ruleSpam(String input) {
-		
-		//0.07453416149068323 -- 76.0 -- 1 -- 0.15789473684210525 -- 2.0 --
-		// 0.016666666666666666 -- 14.0 -- 0 -- 0.0 -- 2.0 --  ::  -- Abis enak sih ni no hp ak klo mo nlf umur ak 25 081271181335
-		// 0.07453416149068323 -- 76.0 -- 1 -- 0.15789473684210525 -- 2.0 --  ::  -- BFI Finance siap memban","u anda dalam kebu","uhan modal usaha, a","au keperluan lain nya , Tanpa BI Checking, Proses SE-Indonesia  jaminan BPKB Mobil/","ruk/sp.mo","or,\nHub :\n0852 7009 1231.                                P i n BB  :  5 9 E 9 7 2 8 
-		// 0.007936507936507936 -- 16.0 -- 0 -- 0.0625 -- 2.0 --  ::  -- Bagi ","eman ","eman yg bu","uh imformasi ","","g bisnis syariah bisa lia"," www.k-link.co.id a","au hubungi/wa : 081252194883
-		
-		if(  //(uppercaseRule(input) > 0.7 && lengthRule(input) > 5 && specialWordRule(input) > 1) 
-			(uppercaseRule(input) > 0.1 && lengthRule(input) > 5 && specialWordRule(input) > 3)  
-				|| (singlecharacterRule(input) > 0.3 && lengthRule(input) > 10)
-				|| (uppercaseRule(input) > 0 && lengthRule(input) > 5 && specialWordRule(input) >= 1 && blackWord(input) > 1)  
-				|| (uppercaseRule(input) > 0.5 && blackWord(input) >= 1)
-				|| (specialWordRule(input) > 10 && blackWord(input) >= 1)
-				|| (blackWord(input) >= 3 && lengthRule(input) < 10)
-				|| (blackWord(input) >= 3 && lengthRule(input) > 10 && uppercaseRule(input) > 0.1) 
+
+		if(
+			(specialWordRule(input) > 3)  
+				|| (singlecharacterRule(input) > 0.3)
+				|| (specialWordRule(input) >= 1 && blackWord(input) > 1)
+				|| (specialWordRule(input) > 3 && blackWord(input) >= 1)
+				|| (blackWord(input) >= 3) 
+				|| (contactWord(input) >= 1)
+				|| (specialSpam(input))
 				) {
 			return Komen.SPAM;
 		}
@@ -55,8 +50,8 @@ public class RuleFilter {
 	public static String ruleNormal(String input) {
 		//0.017857142857142856 -- 42.0 -- 12 -- 0.0 -- 0.0 -- 
 		//0.027522935779816515 -- 19.0 -- 0 -- 0.10526315789473684 -- 0.0 
-		if( (uppercaseRule(input) < 0.4 && specialWordRule(input) < 20 && blackWord(input) < 1)
-				|| (blackWord(input) <= 1 && specialWordRule(input) <= 5 && singlecharacterRule(input) <= 1)
+		if( (specialWordRule(input) < 10 && blackWord(input) < 1 && contactWord(input) < 1 && !specialSpam(input))
+				|| (blackWord(input) <= 1 && specialWordRule(input) <= 2 && singlecharacterRule(input) <= 1 && contactWord(input) < 1 && !specialSpam(input))
 				) {
 			return Komen.NORMAL;
 		}
@@ -67,11 +62,11 @@ public class RuleFilter {
 	public static String printRule(String input) {
 		String sep = " -- ";
 		String result = (
-				uppercaseRule(input) + sep
-				+ lengthRule(input) + sep
-				+ specialWordRule(input) + sep 
+				specialWordRule(input) + sep 
 				+ singlecharacterRule(input) + sep
 				+ blackWord(input) + sep 
+				+ contactWord(input) + sep
+				+ specialSpam(input) + sep
 				+ Util.stringList(pinWord(input)) + sep
 				+ input
 				);
@@ -91,25 +86,21 @@ public class RuleFilter {
 			result += Util.countSub(input.toLowerCase(), black);
 		}
 		
-		
-		result += Util.bbPin(input).size();
+		//result += Util.bbPin(input).size();
 		
 		return result;
 	}
 	
-	public static double uppercaseRule(String input) {
+	public static double contactWord(String input) {
+		double result = 0;
 		
-		if(input  == null || input.length() == 0)
-			return 0;
+		result += Util.bbPin(input).size();
+		result += Util.phoneNumber(input).size();
 		
-		int upperCase = 0;
-		for (int k = 0; k < input.length(); k++) {
-		    if (Character.isUpperCase(input.charAt(k))) upperCase++;
-		}
-		
-		double check = (double) upperCase * 1.0 / input.length();
-		return check;
+		return result;
 	}
+	
+
 	
 	public static double singlecharacterRule(String input) {
 		if(input  == null || input.length() == 0)
@@ -130,12 +121,7 @@ public class RuleFilter {
 		return check;
 	}
 	
-	
-	public static double lengthRule(String input) {
-		String[] split = input.split(" ");
-		
-		return split.length;
-	}
+
 	
 	public static int specialWordRule(String input) {
 		if(input  == null || input.length() == 0)
@@ -166,11 +152,24 @@ public class RuleFilter {
 			if(c&&s) cs = true;
 		}
 		
-		if((nc&&cs) || (ns&&cs) || (nc&&ns)) // 
-			count += 10;
-		
-		
 		return count;
+	}
+	
+	
+	public static boolean specialSpam(String input) {
+		boolean result = false;
+		
+		// Check: Id Line 
+		if(input.toLowerCase().matches("(.*)(id)(\\s*)(line)(.*)")) {
+			result = true;
+		}
+		
+		// Check: space only
+		if(input.trim().length() == 0) {
+			result = true;
+		}
+		
+		return result;
 	}
 	
 	public static void regexMatch(String input) {
@@ -186,6 +185,14 @@ public class RuleFilter {
 		
 		if(input.matches("/[0-9][ABCDEFabcdef]\\s*[ABCDEFabcdef]{2,}/"))
 			System.out.println(input);
+	}
+	
+	public static void main(String[] args) {
+		String input = "V.1.A.G.R.A USA O.B.A.T K.U.A.T PATEN\n\n          ASLI ORIGINAL IMPORT\n\nO.B.A.T K.U.A.T NO 1\n\nMGATASI DIABET- KENCANG.T.LAMA\nTlp:0.81.2.28.4.49.4.99/pin:D18A5778 ※ VI@GRA USA,KLG USA,CIALIS\n※ PEMUTIH WAJAH/BADAN \n※ ALAT BANTU P/W DLL.."; 
+				//"JUαL  : V1∆GR∆ Pfizer USA 100mg \n\n                LASER   HOLOGRAM   \n                                                                                             LOGO KUDA BOLA API ¤RIGIN∆L \n\n  0.8.1.2.2.5.1.7.7.7.5.1    /  5e 69 44 67";
+		//		"JUαL  : \" V1∆GR∆ Pfizer USA \" 100mg \n              LOGO \" BOLA API KUDA\"  ¤RIGIN∆L \n\n                 \n  0 8 1 2 2 5 1 7 7 7  5 1       /     5e 6 9 44 67";
+		
+		System.out.println(printRule(input));
 	}
 
 }
