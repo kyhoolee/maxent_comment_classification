@@ -2,6 +2,7 @@ package id.co.babe.filter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,7 +17,15 @@ public class DataReader {
     private static final char DEFAULT_QUOTE = '"';
     
     public static void main(String[] args) {
-    	
+    	String komen = "good_komen.txt";
+    	String revised = "false_negative_revised.txt";
+    	//filterKomen(komen, revised);
+    	filterKomen("revised_bad_komen.txt");
+    }
+    
+    
+    
+    public static void checkKomen() {
     	List<Komen> komens = tokenFilter(readKomensCsv(SOURCE + "/label_komen2.csv"));
     	int spam = 0;
     	for(int i = 0 ; i < komens.size() ; i ++) {
@@ -35,6 +44,52 @@ public class DataReader {
     	
     	
     }
+    
+    
+    public static void filterKomen(String komen_file, String revised_file) {
+    	List<String> komen = TextfileIO.readFile(komen_file);
+    	List<String> revised = TextfileIO.readFile(revised_file);
+    	
+    	HashSet<String> set_komen = new HashSet<>();
+    	HashSet<String> set_revised = new HashSet<>();
+    	
+    	set_komen.addAll(komen);
+    	set_revised.addAll(revised);
+    	
+    	System.out.println(komen.size());
+    	System.out.println(set_komen.size() + " -- " + set_revised.size());
+    	
+    	for(String r : set_revised) {
+    		set_komen.remove(r);
+    	}
+    	
+    	System.out.println(set_komen.size());
+    	
+    	List<String> result = new ArrayList<String>();
+    	result.addAll(set_komen);
+    	
+    	TextfileIO.writeFile("revised_" + komen_file, result);
+    }
+    
+    public static void filterKomen(String komen_file) {
+    	List<String> komen = TextfileIO.readFile(komen_file);
+    	
+    	HashSet<String> set_komen = new HashSet<>();
+    	
+    	set_komen.addAll(komen);
+    	
+    	System.out.println(komen.size());
+    	System.out.println(set_komen.size());
+    	
+    	
+    	System.out.println(set_komen.size());
+    	
+    	List<String> result = new ArrayList<String>();
+    	result.addAll(set_komen);
+    	
+    	TextfileIO.writeFile("revised_" + komen_file, result);
+    }
+    
     
     public static KomenDataset buildSample(KomenDataset dataset, String name, double train_prob) {
     	String filePath = SOURCE + "/" + name;
@@ -78,10 +133,10 @@ public class DataReader {
     	List<String> data = TextfileIO.readFile(filePath);
     	for(int i = 0 ; i < data.size() ; i ++) {
     		String content = data.get(i);
-    		//content = content.replace("\",\"", " ");
-    		Komen k = new Komen(content, label);
-    		
-    		result.add(k);
+    		if(content != null && !content.isEmpty()) {
+	    		Komen k = new Komen(content, label);
+	    		result.add(k);
+    		}
     	}
     	
     	return result;
