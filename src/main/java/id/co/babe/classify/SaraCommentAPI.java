@@ -4,8 +4,8 @@ import id.co.babe.filter.DataReader;
 import id.co.babe.filter.model.KomenDataset;
 
 import java.io.File;
-import java.io.IOException;
 
+import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.types.InstanceList;
 
@@ -30,24 +30,43 @@ public class SaraCommentAPI {
 	}
 
 
-	public static Classifier loadClassifier(File serializedFile) {
+	/**
+	 * Load classifier from file
+	 * @param classifier_path
+	 * @return
+	 */
+	public static Classifier loadClassifier(String classifier_path) {
 		Classifier classifier = null;
 
 		try {
-			classifier = KomenClassification.loadClassifier(serializedFile);
-		} catch (ClassNotFoundException | IOException e) {
+			classifier = KomenClassification.loadClassifier(new File(classifier_path));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return classifier;
 	}
+	
+	
 
-	public static void saveClassifier(Classifier classifier, File serializedFile) {
+	public static void saveClassifier(Classifier classifier, String classifier_path) {
 		try {
-			KomenClassification.saveClassifier(classifier, serializedFile);
-		} catch (IOException e) {
+			KomenClassification.saveClassifier(classifier, new File(classifier_path));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Classify comment by classifier
+	 * @param classifier
+	 * @param input
+	 * @return
+	 */
+	public static String classify(Classifier classifier, String input) {
+		Classification cf = classifier.classify(input);
+		String res = cf.getLabeling().getBestLabel().toString();
+		return res;
 	}
 
 	public static Classifier trainClassifier(InstanceList trainingInstances) {
@@ -59,6 +78,14 @@ public class SaraCommentAPI {
 		return KomenClassification.buildInstance(bad_file, good_file, train_percent);
 	}
 
+	/**
+	 * Build classifier from good_data and bad_data then save to classifier_file
+	 * @param bad_file
+	 * @param good_file
+	 * @param train_percent
+	 * @param classifier_file
+	 * @return
+	 */
 	public static Classifier buildClassifier(String bad_file, String good_file,
 			double train_percent, String classifier_file) {
 		return KomenClassification.buildClassifier(bad_file, good_file, train_percent, classifier_file);
