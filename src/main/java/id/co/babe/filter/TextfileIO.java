@@ -148,7 +148,8 @@ public class TextfileIO {
 
 			String line;
 			while ((line = br.readLine()) != null) {
-				result.add(line);
+				if(line != null && !line.isEmpty())
+					result.add(line);
 				
 			}
 		} catch (IOException e) {

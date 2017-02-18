@@ -30,6 +30,7 @@ import cc.mallet.pipe.iterator.ArrayIterator;
 import cc.mallet.types.FeatureVector;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
+import cc.mallet.types.Label;
 import cc.mallet.types.LabelAlphabet;
 import id.co.babe.classifier.bayes.BayesClassifier;
 import id.co.babe.filter.DataReader;
@@ -81,7 +82,10 @@ public class KomenClassification {
 			
 			for(int i = 0 ; i < test.length ; i ++) {
 				Classification cf = classifier.classify(test[i]);
-				System.out.println(cf.getLabeling().getBestLabel().toString());
+				Label label = cf.getLabeling().getBestLabel();
+				String res = cf.getLabeling().getBestLabel().toString();
+				double score = cf.getLabeling().value(label);
+				System.out.println(res + "  " + score + " -- " + test[i]);
 			}
 			
 			String[] test1 = {
@@ -110,9 +114,10 @@ public class KomenClassification {
 			System.out.println();
 			for(int i = 0 ; i < test1.length ; i ++) {
 				Classification cf = classifier.classify(test1[i]);
+				Label label = cf.getLabeling().getBestLabel();
 				String res = cf.getLabeling().getBestLabel().toString();
-				
-				System.out.println(res + "  " + test1[i]);
+				double score = cf.getLabeling().value(label);
+				System.out.println(res + "  " + score + " -- " + test1[i]);
 			}
 			
 		} catch (IOException e) {
@@ -133,9 +138,9 @@ public class KomenClassification {
 		KomenDataset data = new KomenDataset();
 
 		data.updateData(
-				DataReader.readSpamKomens(ROOT + "revised_bad_komen.txt"), 0.75);
+				DataReader.readSpamKomens(ROOT + "revised_17_182_sara_komen.txt"), 0.8);//revised_ken_sara_comments.txt
 		data.updateData(
-				DataReader.readNormalKomens(ROOT + "revised_good_komen.txt"),
+				DataReader.readNormalKomens(ROOT + "revised_17_182_non_sara_komen.txt"),
 				0.8);
 
 		System.out.println("Train data: ");
@@ -387,13 +392,50 @@ public class KomenClassification {
 		int true_pos = 0;
 		int true_neg = 0;
 
+		int high_false_pos = 0;
+		int high_false_neg = 0;
+		int high_true_pos = 0;
+		int high_true_neg = 0;
+		
+		List<String> highTrust = new ArrayList<>();
+		List<String> highFalseNegList = new ArrayList<>();
+		List<String> highFalsePosList = new ArrayList<>();
+		
 		List<String> falseNegList = new ArrayList<>();
 		List<String> falsePosList = new ArrayList<>();
 
 		for (int i = 0; i < data.test.size(); i++) {
 			Komen k = data.test.get(i);
-			String test_content = k.content;// repaceSpeCharacter(k.content);
-			String res = c.classify(test_content).getLabeling().getBestLabel().toString();
+			cf = c.classify(k.content);
+			Label label = cf.getLabeling().getBestLabel();
+			String res = cf.getLabeling().getBestLabel().toString();
+			double score = cf.getLabeling().value(label);
+			if(score > 0.75) {
+				highTrust.add(k.content);
+				
+				if (k.label.equals(Komen.SPAM) && res.equals(Komen.NORMAL)) {
+					highFalsePosList.add(k.content);
+				}
+
+				if (k.label.equals(Komen.NORMAL) && res.equals(Komen.SPAM)) {
+					highFalseNegList.add(k.content);
+				}
+				
+				
+				if (k.label.equals(Komen.NORMAL)) {
+					if (res.equals(Komen.NORMAL)) {
+						high_true_neg++;
+					} else {
+						high_false_neg++;
+					}
+				} else {
+					if (res.equals(Komen.SPAM)) {
+						high_true_pos++;
+					} else {
+						high_false_pos++;
+					}
+				}
+			}
 
 			if (k.label.equals(Komen.SPAM) && res.equals(Komen.NORMAL)) {
 				falsePosList.add(k.content);
@@ -434,6 +476,20 @@ public class KomenClassification {
 
 		double f_score = 2 * precision * recall / (precision + recall);
 		System.out.println("F-Score: " + f_score);
+		
+		System.out.println("\n\n");
+		System.out.println("high_False_pos: " + high_false_pos + " -- high_Total_pos: "
+				+ (high_false_pos + high_true_pos));
+		System.out.println("high_False_neg: " + high_false_neg + " -- high_Total_neg: "
+				+ (high_false_neg + high_true_neg));
+		
+		precision = high_true_pos * 1.0 / (high_true_pos + high_false_pos);
+		recall = high_true_pos * 1.0 / (high_false_neg + high_true_pos);
+		System.out.println("Precision: " + precision + " -- Recall: " + recall);
+
+		f_score = 2 * precision * recall / (precision + recall);
+		System.out.println("F-Score: " + f_score);
+		
 	}
 
 	public static void estimateBayes() {
@@ -475,8 +531,8 @@ public class KomenClassification {
 		List<String> falseNegList = new ArrayList<>();
 		List<String> falsePosList = new ArrayList<>();
 
-		for (int i = 0; i < data.train.size(); i++) {
-			Komen k = data.train.get(i);
+		for (int i = 0; i < data.test.size(); i++) {
+			Komen k = data.test.get(i);
 			String res = c.classify(k.content).getLabeling().getBestLabel()
 					.toString();
 
@@ -521,77 +577,5 @@ public class KomenClassification {
 		System.out.println("F-Score: " + f_score);
 	}
 
-	public static void estimate() {
-		KomenDataset data = buildData();
 
-		// Train the probability with naive-bayes
-		BayesClassifier<String, String> bayes = new BayesClassifier<String, String>();
-		for (int i = 0; i < data.train.size(); i++) {
-			Komen k = data.train.get(i);
-			bayes.learn(k.label, WordTokenizer.tokenize(k.content));// Arrays.asList(k.content.toLowerCase().split("\\s")));
-		}
-
-		// Test the model
-
-		int false_pos = 0;
-		int false_neg = 0;
-		int true_pos = 0;
-		int true_neg = 0;
-
-		List<String> falseNegList = new ArrayList<>();
-		List<String> falsePosList = new ArrayList<>();
-
-		for (int i = 0; i < data.test.size(); i++) {
-			Komen k = data.test.get(i);
-			String res = bayes.classify(WordTokenizer.tokenize(k.content))
-					.getCategory();// Arrays.asList(k.content.toLowerCase().split("\\s"))).getCategory();
-
-			// k.content = Util.filter(k.content);
-			// if(res == Komen.NORMAL) {
-			// res = RuleFilter.ruleSpam(k.content);
-			// } else { //if(res == Komen.SPAM)
-			// res = RuleFilter.ruleNormal(k.content);
-			// }
-
-			if (k.label == Komen.SPAM && res == Komen.NORMAL) {
-				falsePosList.add(k.content);// RuleFilter.printRule(k.content).toLowerCase());//
-			}
-
-			if (k.label == Komen.NORMAL && res == Komen.SPAM) {
-				falseNegList.add(k.content);// RuleFilter.printRule(k.content));
-											// //k.content);//
-			}
-
-			if (k.label == Komen.NORMAL) {
-				if (res == Komen.NORMAL) {
-					true_neg++;
-				} else {
-					false_neg++;
-				}
-			} else {
-				if (res == Komen.SPAM) {
-					true_pos++;
-				} else {
-					false_pos++;
-				}
-			}
-
-		}
-
-		System.out.println("\n\n");
-		System.out.println("False_pos: " + false_pos + " -- Total_pos: "
-				+ (false_pos + true_pos));
-		System.out.println("False_neg: " + false_neg + " -- Total_neg: "
-				+ (false_neg + true_neg));
-
-		TextfileIO.writeFile(ROOT + "false_negative.txt", falseNegList);
-		TextfileIO.writeFile(ROOT + "false_positive.txt", falsePosList);
-
-		double precision = true_pos * 1.0 / (true_pos + false_pos);
-		double recall = true_pos * 1.0 / (false_neg + true_pos);
-		System.out.println("Precision: " + precision + " -- Recall: " + recall);
-
-		double f_score = 2 * precision * recall / (precision + recall);
-		System.out.println("F-Score: " + f_score);
-	}
 }

@@ -20,7 +20,8 @@ public class DataReader {
     	String komen = "good_komen.txt";
     	String revised = "false_negative_revised.txt";
     	//filterKomen(komen, revised);
-    	filterKomen("revised_bad_komen.txt");
+    	//filterKomen("revised_sara_comments.txt");
+    	filterKomen("20_182_non_sara_komen.txt");
     }
     
     
