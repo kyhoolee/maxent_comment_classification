@@ -40,7 +40,7 @@ Classify comment to sara / normal / undefined
 @param input - comment to classify
 @param normal_threshold - Confident threshold to make sure a comment is normal
 @param sara_threshold - Confident threshold to make sure a comment is sara
-@return
+@return  0 - Sara and 1 - Normal 2 - Probable
 
 public static String classifyConfident(Classifier c, String input, double normal_threshold, double sara_threshold) 
 
@@ -49,7 +49,7 @@ public static String classifyConfident(Classifier c, String input, double normal
 Classify comment to sara / normal / undefined with default threshold
 @param c - classifier
 @param input - comment to classify
-@return
+@return 0 - Sara and 1 - Normal 2 - Probable
 
 public static String classifyConfident(Classifier c, String input)
 
