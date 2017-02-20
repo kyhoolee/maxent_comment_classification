@@ -3,7 +3,7 @@
 This is Sara comment classification project. The main purpose of this project is to classify Sara comments. The machine learning using to classify these comments from normal comments is Maximum-Entropy.
 
 ## Code Example
-Three main API
+Three main API form SaraCommentAPI class
 
 - Build and save classifier
 
@@ -19,7 +19,7 @@ public static Classifier buildClassifier(String bad_file, String good_file,doubl
 Load classifier object from classifier_file
 
 Load classifier from file
-@param classifier_path
+@param classifier_path : "maxent_classifier.data"
 @return Classifier
 
 public static Classifier loadClassifier(String classifier_path)

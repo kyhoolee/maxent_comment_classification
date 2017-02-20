@@ -45,24 +45,21 @@ public class KomenClassification {
 	public static void main(String[] args) {
 
 		// estimateBayes();
-		// estimateMaxent();
+		//estimateMaxent();
 		
 		//Classifier c = buildClassifier("revised_bad_komen.txt", "revised_good_komen.txt", 0.8, "maxent_classifier.data");
 		//KomenDataset data = buildData();
 		//estimateClassifier(c, data);
 		//loadAndEstimate("revised_bad_komen.txt", "revised_good_komen.txt", 0.8, "maxent_classifier.data");
-		checkClassifier();
+		//checkClassifier();
 		//System.out.println(replaceSpeCharacter("Dan kalo lu kalah HOK,,,lu bakalan balik k cina jualan BAKPAO....HAHAHA"));
 	}
 	
 	public static void checkClassifier() {
 		Classifier classifier;
 
-		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(new FileInputStream(new File("maxent_classifier.data")));
-			classifier = (Classifier) ois.readObject();
-			ois.close();
+			classifier = SaraCommentAPI.loadClassifier("maxent_classifier.data");
 			
 			
 			
@@ -126,11 +123,9 @@ public class KomenClassification {
 				System.out.println("  " + Komen.NORMAL + ":"  + result.get(Komen.NORMAL) + "    --   " + Komen.SARA + ":" + result.get(Komen.SARA));
 			}
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		} 
 		
 
 		
@@ -279,6 +274,7 @@ public class KomenClassification {
 		
 		KomenDataset data = buildData(bad_file, good_file, train_percent);
 		try {
+			//maxent_classifier.data
 			Classifier c = loadClassifier(new File(classifier_file));
 			estimateClassifier(c, data);
 		} catch (FileNotFoundException e) {
@@ -498,6 +494,8 @@ public class KomenClassification {
 
 		f_score = 2 * precision * recall / (precision + recall);
 		System.out.println("F-Score: " + f_score);
+		
+		SaraCommentAPI.saveClassifier(c, "maxent_classifier.data");
 		
 	}
 
