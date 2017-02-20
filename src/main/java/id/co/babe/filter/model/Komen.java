@@ -3,6 +3,7 @@ package id.co.babe.filter.model;
 public class Komen {
 	public static final String SPAM = "0";
 	public static final String NORMAL = "1";
+	public static final String UNDEFINED = "-1";
 	
 	
 	public String content;

@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
@@ -44,13 +45,14 @@ public class KomenClassification {
 	public static void main(String[] args) {
 
 		// estimateBayes();
-		estimateMaxent();
+		// estimateMaxent();
 		
 		//Classifier c = buildClassifier("revised_bad_komen.txt", "revised_good_komen.txt", 0.8, "maxent_classifier.data");
 		//KomenDataset data = buildData();
 		//estimateClassifier(c, data);
 		//loadAndEstimate("revised_bad_komen.txt", "revised_good_komen.txt", 0.8, "maxent_classifier.data");
-		//checkClassifier();
+		checkClassifier();
+		//System.out.println(replaceSpeCharacter("Dan kalo lu kalah HOK,,,lu bakalan balik k cina jualan BAKPAO....HAHAHA"));
 	}
 	
 	public static void checkClassifier() {
@@ -86,6 +88,8 @@ public class KomenClassification {
 				String res = cf.getLabeling().getBestLabel().toString();
 				double score = cf.getLabeling().value(label);
 				System.out.println(res + "  " + score + " -- " + test[i]);
+				Map<String, Double> result = SaraCommentAPI.classifyMap(classifier, test[i]);
+				System.out.println("  " + Komen.NORMAL + ":"  + result.get(Komen.NORMAL) + "    --   " + Komen.SPAM + ":" + result.get(Komen.SPAM));
 			}
 			
 			String[] test1 = {
@@ -118,6 +122,8 @@ public class KomenClassification {
 				String res = cf.getLabeling().getBestLabel().toString();
 				double score = cf.getLabeling().value(label);
 				System.out.println(res + "  " + score + " -- " + test1[i]);
+				Map<String, Double> result = SaraCommentAPI.classifyMap(classifier, test1[i]);
+				System.out.println("  " + Komen.NORMAL + ":"  + result.get(Komen.NORMAL) + "    --   " + Komen.SPAM + ":" + result.get(Komen.SPAM));
 			}
 			
 		} catch (IOException e) {
@@ -138,10 +144,10 @@ public class KomenClassification {
 		KomenDataset data = new KomenDataset();
 
 		data.updateData(
-				DataReader.readSpamKomens(ROOT + "revised_17_182_sara_komen.txt"), 0.8);//revised_ken_sara_comments.txt
+				DataReader.readSpamKomens(ROOT + "revised_17_182_sara_komen.txt"), 0.6);//revised_ken_sara_comments.txt
 		data.updateData(
 				DataReader.readNormalKomens(ROOT + "revised_17_182_non_sara_komen.txt"),
-				0.8);
+				0.6);
 
 		System.out.println("Train data: ");
 		System.out.println(data.train_pos + " -- " + data.train_neg);
@@ -170,7 +176,7 @@ public class KomenClassification {
 		return data;
 	}
 
-	public static String repaceSpeCharacter(String input) {
+	public static String replaceSpeCharacter(String input) {
 		String alphaAndDigits = input.replaceAll("[^a-zA-Z0-9]+", " ");
 		return alphaAndDigits;
 	}
@@ -436,6 +442,9 @@ public class KomenClassification {
 					}
 				}
 			}
+			
+			if(res.equals(Komen.NORMAL) && score < 0.65)
+				res = Komen.SPAM;
 
 			if (k.label.equals(Komen.SPAM) && res.equals(Komen.NORMAL)) {
 				falsePosList.add(k.content);

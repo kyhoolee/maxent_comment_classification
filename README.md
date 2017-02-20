@@ -32,6 +32,27 @@ Classify comment by classifier
 @return 0 - Sara and 1 - Normal
 
 public static String classify(Classifier classifier, String input) 
+
+- Classify comment with confident threshold
+
+Classify comment to sara / normal / undefined
+@param c - classifier
+@param input - comment to classify
+@param normal_threshold - Confident threshold to make sure a comment is normal
+@param sara_threshold - Confident threshold to make sure a comment is sara
+@return
+
+public static String classifyConfident(Classifier c, String input, double normal_threshold, double sara_threshold) 
+
+- Classify comment with default confident threshold
+
+Classify comment to sara / normal / undefined with default threshold
+@param c - classifier
+@param input - comment to classify
+@return
+
+public static String classifyConfident(Classifier c, String input)
+
 ## Motivation
 
 Famous model for text classification is Naive-Bayes, Maximum Entropy, SVM.

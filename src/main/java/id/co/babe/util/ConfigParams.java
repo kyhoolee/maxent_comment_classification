@@ -4,7 +4,7 @@ import java.util.Properties;
 
 
 public class ConfigParams {
-	public static final String CONFIG_PATH = "config.properties";
+	public static String CONFIG_PATH = "config.properties";
 	
 	public static String sql_host = "localhost_";
     public static String sql_port = "3306_";
@@ -12,6 +12,8 @@ public class ConfigParams {
     public static String sql_username = "root_";
     public static String sql_password = "maingames_";
     public static String http_port = "8888";
+    public static double sara_thres = 0.9;
+    public static double normal_thres = 0.9; 
 	
 	private static Properties properties = null;
 	
@@ -29,6 +31,9 @@ public class ConfigParams {
 				
 				http_port = properties.getProperty("http_port");
 				
+				sara_thres = Double.parseDouble(properties.getProperty("sara_thres"));
+				normal_thres = Double.parseDouble(properties.getProperty("normal_thres"));
+				System.out.println(sara_thres + " " + normal_thres);
 				System.out.println(sql_host + " " + sql_port + " " + sql_database + " " + sql_username + " " + sql_password);
 			} catch (Exception e) {
 				e.printStackTrace();
