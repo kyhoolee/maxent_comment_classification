@@ -9,15 +9,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-//import utils.DataFileReader;
-//import ca.uwo.csd.ai.nlp.kernel.KernelManager;
-//import ca.uwo.csd.ai.nlp.kernel.LinearKernel;
-//import ca.uwo.csd.ai.nlp.libsvm.svm_model;
-//import ca.uwo.csd.ai.nlp.libsvm.svm_parameter;
-//import ca.uwo.csd.ai.nlp.libsvm.ex.Instance;
-//import ca.uwo.csd.ai.nlp.libsvm.ex.SVMPredictor;
-//import ca.uwo.csd.ai.nlp.libsvm.ex.SVMTrainer;
-//import ca.uwo.csd.ai.nlp.mallet.libsvm.SVMClassifierTrainer;
+import utils.DataFileReader;
+import ca.uwo.csd.ai.nlp.kernel.KernelManager;
+import ca.uwo.csd.ai.nlp.kernel.LinearKernel;
+import ca.uwo.csd.ai.nlp.libsvm.svm_model;
+import ca.uwo.csd.ai.nlp.libsvm.svm_parameter;
+import ca.uwo.csd.ai.nlp.libsvm.ex.Instance;
+import ca.uwo.csd.ai.nlp.libsvm.ex.SVMPredictor;
+import ca.uwo.csd.ai.nlp.libsvm.ex.SVMTrainer;
+import ca.uwo.csd.ai.nlp.mallet.libsvm.SVMClassifierTrainer;
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
@@ -31,7 +31,7 @@ public class ModelComparator {
 	public static void main(String[] args) {
 		// estimateBayes();
 		//estimateMaxent();
-		//estimateSVM();
+		estimateSVM();
 	}
 	
 
@@ -176,7 +176,7 @@ public class ModelComparator {
 	}
 	
 
-/*
+
 	public static void estimateSVM() {
 		KomenDataset data = KomenClassification.buildData("work_data/tr_sara_komen.txt", "work_data/tr_non_sara_komen.txt", 0.9);
 		InstanceList instances = KomenClassification.buildInstance(data);
@@ -221,6 +221,6 @@ public class ModelComparator {
 		SaraCommentAPI.showResult(true_pos, false_neg, false_pos, true_neg);
 	}
 	
-*/    
+
 
 }
