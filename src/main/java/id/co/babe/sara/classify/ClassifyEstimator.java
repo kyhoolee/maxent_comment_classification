@@ -11,7 +11,7 @@ import cc.mallet.classify.Classifier;
 public class ClassifyEstimator {
 	
 	public static void main(String[] args) {
-		loadAndEstimate("work_data/test_sara_komen.txt", "work_data/test_non_sara_komen.txt", 0.5,0.0, "model_data/maxent_classifier.data");
+		loadAndEstimate("work_data/test_sara_komen.txt", "work_data/test_non_sara_komen.txt", 0.2,0.0, "model_data/maxent_classifier.data");
 	}
 	
 	public static void loadAndEstimate(String sara_file, String normal_file,
