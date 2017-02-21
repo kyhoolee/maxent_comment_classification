@@ -2,7 +2,6 @@ package id.co.babe.sara.filter;
 
 import id.co.babe.sara.classifier.bayes.BayesClassifier;
 import id.co.babe.sara.store.FileDB;
-import id.co.babe.sara.store.SqlDB;
 
 public class BayesFilter extends BayesClassifier<String, String> {
 	public static final String ROOT = "/home/mainspring/tutorial/learn/text-classifier/data/";

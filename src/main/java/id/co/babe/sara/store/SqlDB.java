@@ -1,5 +1,7 @@
 package id.co.babe.sara.store;
 
+import id.co.babe.sara.util.ConfigParams;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,13 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Set;
-
-import id.co.babe.sara.util.ConfigParams;
 
 public class SqlDB {
 	

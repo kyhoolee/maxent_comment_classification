@@ -17,7 +17,7 @@ import cc.mallet.types.Labeling;
 
 public class SaraCommentAPI {
 	public static double NORMAL_THRES = 0.9;
-	public static double SARA_THRES = 0.9;
+	public static double SARA_THRES = 0.6;
 	
 	public static void load() {
 		ConfigParams.load();
@@ -27,18 +27,30 @@ public class SaraCommentAPI {
 	}
 
 
-	public static KomenDataset buildData(String good_file, String bad_file,
+	public static KomenDataset buildData(String sara_file, String normal_file,
 			double train_percent) {
 		KomenDataset data = new KomenDataset();
 
-		data.updateData(DataReader.readSpamKomens(good_file), train_percent);
-		data.updateData(DataReader.readNormalKomens(bad_file), train_percent);
+		data.updateData(DataReader.readSaraKomens(sara_file), train_percent);
+		data.updateData(DataReader.readNormalKomens(normal_file), train_percent);
 
-		System.out.println("Train data: ");
-		System.out.println(data.train_pos + " -- " + data.train_neg);
+		System.out.println("Train data: "+ data.train_pos + " -- " + data.train_neg);
+		System.out.println("Test data: " + data.test_pos + " -- " + data.test_neg);
+		System.out.println("\n\n-------------------");
 
-		System.out.println("\n\nTest data: ");
-		System.out.println(data.test_pos + " -- " + data.test_neg);
+		return data;
+	}
+	
+	
+	public static KomenDataset buildData(String sara_file, String normal_file,
+			double train_sara_percent, double train_normal_percent) {
+		KomenDataset data = new KomenDataset();
+
+		data.updateData(DataReader.readSaraKomens(sara_file), train_sara_percent);
+		data.updateData(DataReader.readNormalKomens(normal_file), train_normal_percent);
+
+		System.out.println("Train data: "+ data.train_pos + " -- " + data.train_neg);
+		System.out.println("Test data: " + data.test_pos + " -- " + data.test_neg);
 		System.out.println("\n\n-------------------");
 
 		return data;
@@ -183,6 +195,12 @@ public class SaraCommentAPI {
 			double train_percent, String classifier_file) {
 		return KomenClassification.buildClassifier(bad_file, good_file, train_percent, classifier_file);
 	}
+	
+	
+	public static Classifier buildClassifier(KomenDataset dataset, String classifier_file) {
+		return KomenClassification.buildClassifier(dataset, classifier_file);
+	}
+
 
 	public static void loadAndEstimate(String bad_file, String good_file,
 			double train_percent, String classifier_file) {
@@ -194,5 +212,46 @@ public class SaraCommentAPI {
 		KomenClassification.estimateClassifier(c, data);
 	}
 
+	/**
+	 * Calculate and show precision and recall result
+	 * @param true_pos
+	 * @param false_neg
+	 * @param false_pos
+	 * @param true_neg
+	 */
+	public static void showResult(double true_pos, double false_neg, double false_pos, double true_neg) {
+		System.out.println();
+		System.out.println("true_pos: " + true_pos + " -- false_neg: " + false_neg);
+		System.out.println("false_pos: " + false_pos + " -- true_neg: " + true_neg);
+
+		System.out.println();
+		System.out.println("true_pos: " + true_pos + " -- true_pos + false_pos: "
+				+ (false_pos + true_pos));
+		System.out.println("true_pos: " + true_pos + " -- false_neg + true_pos: "
+				+ (false_neg + true_pos));
+
+		double precision = true_pos * 1.0 / (true_pos + false_pos);
+		double recall = true_pos * 1.0 / (false_neg + true_pos);
+		System.out.println("Precision: " + precision + " -- Recall: " + recall);
+		double f_score = 2 * precision * recall / (precision + recall);
+		System.out.println("F-Score: " + f_score);
+		
+		
+		
+		System.out.println();
+		System.out.println("true_neg: " + true_neg + " -- true_neg + false_neg: "
+				+ (true_neg + false_neg));
+		System.out.println("true_neg: " + true_neg + " -- false_neg + true_pos: "
+				+ (true_neg + false_pos));
+		
+		double n_precision = true_neg * 1.0 / (true_neg + false_neg);
+		double n_recall = true_neg * 1.0 / (true_neg + false_pos);
+		
+		System.out.println("Neg_Precision: " + n_precision + " -- Ne_Recall: " + n_recall);
+		double n_f_score = 2 * n_precision * n_recall / (n_precision + n_recall);
+		System.out.println("Neg_F-score: " + n_f_score);
+		
+		System.out.println("\n--------------------");
+	}
 
 }

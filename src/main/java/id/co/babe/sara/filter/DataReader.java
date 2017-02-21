@@ -17,13 +17,36 @@ public class DataReader {
     private static final char DEFAULT_QUOTE = '"';
     
     public static void main(String[] args) {
-    	String komen = "good_komen.txt";
-    	String revised = "false_negative_revised.txt";
+    	//String komen = "good_komen.txt";
+    	//String revised = "false_negative_revised.txt";
     	//filterKomen(komen, revised);
     	//filterKomen("revised_sara_comments.txt");
-    	filterKomen("20_182_non_sara_komen.txt");
+    	//filterKomen("202_sara.txt");
+    	//filterKomenTarget("work_data/sara_komen.txt", "work_data/212_sara_komen.txt");
+    	separateData("work_data/train_sara_komen.txt", "work_data/test_sara_komen.txt", 0.8);
+    	separateData("work_data/train_non_sara_komen.txt", "work_data/test_non_sara_komen.txt", 0.8);
     }
     
+    
+    public static void separateData(String source, String target, double keep_percent) {
+    	List<String> data = TextfileIO.readFile(source);
+    	
+    	List<String> remain = new ArrayList<>();
+    	List<String> separate = new ArrayList<>();
+    	
+    	for(String line : data) {
+    		double rand = Math.random();
+			
+			if(keep_percent < rand) {
+				remain.add(line);
+			} else {
+				separate.add(line);
+			}
+    	}
+    	
+    	TextfileIO.writeFile(source, remain);
+    	TextfileIO.writeFile(target, separate);
+    }
     
     
     public static void checkKomen() {
@@ -92,6 +115,25 @@ public class DataReader {
     }
     
     
+    public static void filterKomenTarget(String komen_file, String target_file) {
+    	List<String> komen = TextfileIO.readFile(komen_file);
+    	
+    	HashSet<String> set_komen = new HashSet<>();
+    	
+    	set_komen.addAll(komen);
+    	
+    	System.out.println(komen.size());
+    	System.out.println(set_komen.size());
+    	
+    	
+    	System.out.println(set_komen.size());
+    	
+    	List<String> result = new ArrayList<String>();
+    	result.addAll(set_komen);
+    	
+    	TextfileIO.writeFile(target_file, result);
+    }
+    
     public static KomenDataset buildSample(KomenDataset dataset, String name, double train_prob) {
     	String filePath = SOURCE + "/" + name;
     	return buildData(dataset, tokenFilter(readKomensCsv(filePath)), train_prob);
@@ -119,7 +161,7 @@ public class DataReader {
     	return result;
     }
     
-    public static List<Komen> readSpamKomens(String filePath) {
+    public static List<Komen> readSaraKomens(String filePath) {
     	return readKomens(filePath, Komen.SARA);
     }
     

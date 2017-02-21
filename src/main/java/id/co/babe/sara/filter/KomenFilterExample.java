@@ -1,13 +1,11 @@
 package id.co.babe.sara.filter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import id.co.babe.sara.classifier.bayes.BayesClassifier;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
 import id.co.babe.sara.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KomenFilterExample {
 
@@ -24,11 +22,11 @@ public class KomenFilterExample {
 		KomenDataset data = new KomenDataset();
 
 		//data.updateData(DataReader.readSpamKomens(ROOT + "neg_words.txt"), 1);
-		data.updateData(DataReader.readSpamKomens(ROOT + "spam_output.txt.1"), 0.8);
+		data.updateData(DataReader.readSaraKomens(ROOT + "spam_output.txt.1"), 0.8);
 		data.updateData(DataReader.readNormalKomens(ROOT + "pure_comments.txt.1"), 0.8);
-		data.updateData(DataReader.readSpamKomens(ROOT + "pure_spam.txt.1"), 0.8);
-		data.updateData(DataReader.readSpamKomens(ROOT + "pure_spam_1.txt.1"), 0.8);
-		data.updateData(DataReader.readSpamKomens(ROOT + "spam_unique.txt.1"), 0.8);
+		data.updateData(DataReader.readSaraKomens(ROOT + "pure_spam.txt.1"), 0.8);
+		data.updateData(DataReader.readSaraKomens(ROOT + "pure_spam_1.txt.1"), 0.8);
+		data.updateData(DataReader.readSaraKomens(ROOT + "spam_unique.txt.1"), 0.8);
 
 		System.out.println("Train data: ");
 		System.out.println(data.train_pos + " -- " + data.train_neg);

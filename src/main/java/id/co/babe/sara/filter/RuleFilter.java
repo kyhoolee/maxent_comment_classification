@@ -130,9 +130,9 @@ public class RuleFilter {
 		String[] words = input.toLowerCase().split(" ");
 		int count = 0;
 				
-		boolean nc = false;
-		boolean ns = false;
-		boolean cs = false;
+//		boolean nc = false;
+//		boolean ns = false;
+//		boolean cs = false;
 		for(int i = 0 ; i < words.length ; i ++) {
 			boolean n = words[i].matches(".*\\d+.*");
 			boolean c = words[i].matches(".*[a-zA-Z]+.*");
@@ -147,9 +147,9 @@ public class RuleFilter {
 //			if(n&&c&&s)
 //				count += 10;
 			
-			if(n&&c) nc = true;
-			if(n&&s) ns = true;
-			if(c&&s) cs = true;
+//			if(n&&c) nc = true;
+//			if(n&&s) ns = true;
+//			if(c&&s) cs = true;
 		}
 		
 		return count;
