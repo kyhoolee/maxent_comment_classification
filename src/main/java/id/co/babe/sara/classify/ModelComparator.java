@@ -1,5 +1,6 @@
 package id.co.babe.sara.classify;
 
+import id.co.babe.sara.filter.TextfileIO;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
 
@@ -29,9 +30,9 @@ import cc.mallet.types.Label;
 
 public class ModelComparator {
 	public static void main(String[] args) {
-		// estimateBayes();
+		estimateBayes();
 		//estimateMaxent();
-		estimateSVM();
+		//estimateSVM();
 	}
 	
 
@@ -120,6 +121,9 @@ public class ModelComparator {
 
 		}
 		
+		TextfileIO.writeFile("model_result/maxent_false_neg.txt", falseNegList);
+		TextfileIO.writeFile("model_result/maxent_false_pos.txt", falsePosList);
+		
 		SaraCommentAPI.showResult(true_pos, false_neg, false_pos, true_neg);
 		SaraCommentAPI.showResult(high_true_pos, high_false_neg, high_false_pos, high_true_neg);
 		
@@ -129,7 +133,7 @@ public class ModelComparator {
 				+ " probable: " + (data.test.size() - highTrust.size()));
 		
 		
-		SaraCommentAPI.saveClassifier(c, "maxent_classifier.data");
+		SaraCommentAPI.saveClassifier(c, "model_data/maxent_classifier.data");
 		
 	}
 
@@ -172,17 +176,23 @@ public class ModelComparator {
 				}
 			}
 		}
+		
+		TextfileIO.writeFile("model_result/bayes_false_neg.txt", falseNegList);
+		TextfileIO.writeFile("model_result/bayes_false_pos.txt", falsePosList);
+		
+		
 		SaraCommentAPI.showResult(true_pos, false_neg, false_pos, true_neg);
+		
+		SaraCommentAPI.saveClassifier(c, "model_data/bayes_classifier.data");
 	}
 	
 
 
 	public static void estimateSVM() {
-		KomenDataset data = KomenClassification.buildData("work_data/tr_sara_komen.txt", "work_data/tr_non_sara_komen.txt", 0.9);
+		KomenDataset data = KomenClassification.buildData("work_data/tr_sara_komen.txt", "work_data/tr_non_sara_komen.txt", 0.7);
 		InstanceList instances = KomenClassification.buildInstance(data);
-		ClassifierTrainer trainer = new SVMClassifierTrainer(new LinearKernel());
-        Classifier c = trainer.train(instances);
-        //System.out.println("Accuracy: " + classifier.getAccuracy(testingInstanceList));
+        Classifier c = new SVMClassifierTrainer(new LinearKernel()).train(instances);
+        //System.out.println("Accuracy: " + c.getAccuracy());
 
 		// Test the model
 
@@ -218,7 +228,13 @@ public class ModelComparator {
 				}
 			}
 		}
+		
+		TextfileIO.writeFile("model_result/svm_false_neg.txt", falseNegList);
+		TextfileIO.writeFile("model_result/svm_false_pos.txt", falsePosList);
+		
 		SaraCommentAPI.showResult(true_pos, false_neg, false_pos, true_neg);
+		
+		SaraCommentAPI.saveClassifier(c, "model_data/svm_classifier.data");
 	}
 	
 

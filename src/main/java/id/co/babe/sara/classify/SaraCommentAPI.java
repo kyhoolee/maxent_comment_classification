@@ -1,5 +1,6 @@
 package id.co.babe.sara.classify;
 
+import id.co.babe.sara.classify.nlp.NlpRuleFilter;
 import id.co.babe.sara.filter.DataReader;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
@@ -93,6 +94,24 @@ public class SaraCommentAPI {
 	public static String classify(Classifier classifier, String input) {
 		Classification cf = classifier.classify(input);
 		String res = cf.getLabeling().getBestLabel().toString();
+		return res;
+	}
+	
+	public static String classifyRule(Classifier classifier, String input) {
+		Classification cf = classifier.classify(input);
+		String res = cf.getLabeling().getBestLabel().toString();
+		if(res.equals(Komen.NORMAL)) {
+			res = NlpRuleFilter.ruleInference(input);
+		}
+		return res;
+	}
+	
+	public static String classifyConfidentRule(Classifier classifier, String input, double normal_threshold, double sara_threshold) {
+		
+		String res = classifyConfident(classifier, input, normal_threshold, sara_threshold);
+		if(res.equals(Komen.NORMAL)) {
+			res = NlpRuleFilter.ruleInference(input);
+		}
 		return res;
 	}
 	

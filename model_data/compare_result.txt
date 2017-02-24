@@ -1,0 +1,51 @@
+SVM
+true_pos: 1475.0 -- false_neg: 708.0
+false_pos: 388.0 -- true_neg: 6561.0
+
+true_pos: 1475.0 -- true_pos + false_pos: 1863.0
+true_pos: 1475.0 -- false_neg + true_pos: 2183.0
+Precision: 0.7917337627482555 -- Recall: 0.6756756756756757
+F-Score: 0.7291151754819574
+
+true_neg: 6561.0 -- true_neg + false_neg: 7269.0
+true_neg: 6561.0 -- false_neg + true_pos: 6949.0
+Neg_Precision: 0.902600082542303 -- Ne_Recall: 0.9441646280040293
+Neg_F-score: 0.9229146152764102
+-------------
+Maxent
+true_pos: 1467.0 -- false_neg: 688.0
+false_pos: 303.0 -- true_neg: 6646.0
+
+true_pos: 1467.0 -- true_pos + false_pos: 1770.0
+true_pos: 1467.0 -- false_neg + true_pos: 2155.0
+Precision: 0.8288135593220339 -- Recall: 0.6807424593967517
+F-Score: 0.747515923566879
+
+true_neg: 6646.0 -- true_neg + false_neg: 7334.0
+true_neg: 6646.0 -- false_neg + true_pos: 6949.0
+Neg_Precision: 0.9061903463321517 -- Ne_Recall: 0.9563966038278889
+Neg_F-score: 0.9306168171952671
+-------------
+Bayes
+true_pos: 1528.0 -- false_neg: 615.0
+false_pos: 537.0 -- true_neg: 6412.0
+true_pos: 1528.0 -- true_pos + false_pos: 2065.0
+true_pos: 1528.0 -- false_neg + true_pos: 2143.0
+Precision: 0.739951573849879 -- Recall: 0.7130191320578628
+F-Score: 0.726235741444867
+
+true_neg: 6412.0 -- true_neg + false_neg: 7027.0
+true_neg: 6412.0 -- false_neg + true_pos: 6949.0
+Neg_Precision: 0.9124804326170485 -- Ne_Recall: 0.9227226939127932
+Neg_F-score: 0.9175729822552947
+
+
+----------
+Maxent + NLP_Rule
+true_pos: 1550.0 -- false_neg: 612.0
+false_pos: 656.0 -- true_neg: 6293.0
+
+true_pos: 1550.0 -- true_pos + false_pos: 2206.0
+true_pos: 1550.0 -- false_neg + true_pos: 2162.0
+Precision: 0.7026291931097008 -- Recall: 0.7169287696577243
+F-Score: 0.7097069597069597

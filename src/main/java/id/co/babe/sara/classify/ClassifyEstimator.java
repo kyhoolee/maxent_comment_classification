@@ -1,5 +1,6 @@
 package id.co.babe.sara.classify;
 
+import id.co.babe.sara.filter.TextfileIO;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
 
@@ -11,7 +12,7 @@ import cc.mallet.classify.Classifier;
 public class ClassifyEstimator {
 	
 	public static void main(String[] args) {
-		loadAndEstimate("work_data/test_sara_komen.txt", "work_data/test_non_sara_komen.txt", 0.2,0.0, "model_data/maxent_classifier.data");
+		loadAndEstimate("work_data/test_sara.txt", "work_data/test_non_sara_komen.txt", 0.2,0.0, "model_data/maxent_classifier.data");
 	}
 	
 	public static void loadAndEstimate(String sara_file, String normal_file,
@@ -52,11 +53,11 @@ public class ClassifyEstimator {
 			String res = SaraCommentAPI.classify(c, k.content);
 			
 			if (k.label.equals(Komen.SARA) && res.equals(Komen.NORMAL)) {
-				falsePosList.add(k.content);
+				falseNegList.add(k.content);
 			}
 
 			if (k.label.equals(Komen.NORMAL) && res.equals(Komen.SARA)) {
-				falseNegList.add(k.content);
+				falsePosList.add(k.content);
 			}
 
 			if (k.label.equals(Komen.NORMAL)) {
@@ -95,7 +96,8 @@ public class ClassifyEstimator {
 
 		}
 		
-		
+		TextfileIO.writeFile("model_result/false_neg.txt", falseNegList);
+		TextfileIO.writeFile("model_result/false_pos.txt", falsePosList);
 		
 		SaraCommentAPI.showResult(true_pos, false_neg, false_pos, true_neg);
 		SaraCommentAPI.showResult(h_true_pos, h_false_neg, h_false_pos, h_true_neg);

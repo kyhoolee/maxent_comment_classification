@@ -18,7 +18,18 @@ public class TextfileIO {
 		//checkRegex();
 		//preProcessSpam("/home/mainspring/tutorial/learn/text-classifier/data/spam_output.txt");
 		//preProcessCsv("/home/mainspring/tutorial/learn/text-classifier/data/spam_unique.txt");
-		preProcessStopwords();
+		//preProcessStopwords();
+		sample();
+	}
+	
+	public static void sample() {
+		String file_name = "/home/mainspring/tutorial/learn/text-classifier/data_komen/sara_classification/non_sara_comment.txt"; 
+				//"/home/mainspring/compare_result.txt"; 
+				//"/home/mainspring/sara_comment.txt"; 
+				//"/home/mainspring/tutorial/learn/text-classifier/data_komen/sara_classification/old_sara_comment.txt";
+		///
+		List<String> data = readFile(file_name);
+		System.out.println(data.size());
 	}
 	
 	public static void checkRegex() {

@@ -13,8 +13,8 @@ import cc.mallet.types.Label;
 public class ClassifyBuilder {
 	
 	public static void main(String[] args) {
-		String sara_file = "work_data/tr_sara_komen.txt";
-		String normal_file = "work_data/tr_non_sara_komen.txt";
+		String sara_file = "work_data/242_data/review_sara.txt";
+		String normal_file = "work_data/242_data/review_non.txt";
 		String classifier_file = "model_data/maxent_classifier.data";
 		
 		KomenDataset data = SaraCommentAPI.buildData(sara_file, normal_file, 0.95, 0.95);

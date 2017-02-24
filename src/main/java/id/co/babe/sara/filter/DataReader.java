@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
+import id.co.babe.sara.classify.nlp.NlpRuleFilter;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
 
@@ -23,9 +24,32 @@ public class DataReader {
     	//filterKomen("revised_sara_comments.txt");
     	//filterKomen("202_sara.txt");
     	//filterKomenTarget("work_data/sara_komen.txt", "work_data/212_sara_komen.txt");
-    	separateData("work_data/train_sara_komen.txt", "work_data/test_sara_komen.txt", 0.8);
-    	separateData("work_data/train_non_sara_komen.txt", "work_data/test_non_sara_komen.txt", 0.8);
+    	//separateData("work_data/train_sara_komen.txt", "work_data/test_sara_komen.txt", 0.8);
+    	//separateData("work_data/train_non_sara_komen.txt", "work_data/test_non_sara_komen.txt", 0.8);
+    	
+    	//ruleFilter("work_data/tr_non_sara_komen.txt", "work_data/false_tr_non_sara_komen.txt", "work_data/true_tr_non_sara_komen.txt");
+    	//ruleFilter("work_data/test_non_sara_komen.txt", "work_data/false_test_non_sara_komen.txt", "work_data/true_test_non_sara_komen.txt");
+    	filterKomenTarget("work_data/242_data/sara.txt", "work_data/242_data/review_sara.txt");
+    	filterKomenTarget("work_data/242_data/non.txt", "work_data/242_data/review_non.txt");
+    	
     }
+    
+    public static void ruleFilter(String inputFile, String outputSara, String outputNon) {
+    	List<String> data = TextfileIO.readFile(inputFile);
+    	
+    	List<String> sara = new ArrayList<String>();
+    	List<String> non = new ArrayList<String>();
+    	for(String k : data) {
+    		if(NlpRuleFilter.ruleInference(k).equals(Komen.SARA)) {
+    			sara.add(k);
+    		} else {
+    			non.add(k);
+    		}
+    	}
+    	
+    	TextfileIO.writeFile(outputSara, sara);
+    	TextfileIO.writeFile(outputNon, non);
+    } 
     
     
     public static void separateData(String source, String target, double keep_percent) {
