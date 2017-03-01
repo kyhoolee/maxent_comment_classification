@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.DataFileReader;
 import ca.uwo.csd.ai.nlp.kernel.KernelManager;
 import ca.uwo.csd.ai.nlp.kernel.LinearKernel;
 import ca.uwo.csd.ai.nlp.libsvm.svm_model;
@@ -19,6 +18,7 @@ import ca.uwo.csd.ai.nlp.libsvm.ex.Instance;
 import ca.uwo.csd.ai.nlp.libsvm.ex.SVMPredictor;
 import ca.uwo.csd.ai.nlp.libsvm.ex.SVMTrainer;
 import ca.uwo.csd.ai.nlp.mallet.libsvm.SVMClassifierTrainer;
+import ca.uwo.csd.ai.nlp.utils.DataFileReader;
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;

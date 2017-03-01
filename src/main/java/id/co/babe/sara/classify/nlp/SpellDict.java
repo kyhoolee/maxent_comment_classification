@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SpellDict {
 	public Map<String, Double> wordCount;
@@ -18,9 +19,13 @@ public class SpellDict {
 		total = 0;
 	}
 	
-	public static List<String> parseWord(String input) {
+	private static List<String> parseWord(String input) {
 		String[] words = input.split("\\W+");
 		return new ArrayList<String>(Arrays.asList(words));
+	}
+	
+	public boolean contains(String word) {
+		return wordCount.keySet().contains(word);
 	}
 	
 	public void updateDict(String data) {
@@ -55,6 +60,25 @@ public class SpellDict {
 		TextfileIO.writeFile(filePath, data);
 	}
 	
+	public String mostFreqWord(Set<String> words) {
+		if(words.isEmpty()) {
+			return "";
+		} else {
+			String result = "";
+			double v = -1;
+			
+			for(String w: words) {
+				double val = this.wordCount.get(w);
+				if(val > v) {
+					result = w;
+					v = val;
+				}
+			}
+			
+			
+			return result;
+		}
+	}
 	
 	
 	public static SpellDict buildDict(String target, String... filePath) {
@@ -66,6 +90,25 @@ public class SpellDict {
 		}
 		
 		dict.writeFile(target);
+		
+		return dict;
+	}
+	
+	public static SpellDict readIndoDict(String file) {
+		SpellDict dict = new SpellDict();
+		
+		List<String> data = TextfileIO.readFile(file);
+		
+		for(String pair: data) {
+			List<String> p = parseWord(pair);
+			if(p.size() == 2) {
+				String w = p.get(0);
+				double v = Double.parseDouble(p.get(1));
+				dict.wordCount.put(w, v);
+				dict.total += v;
+			}
+		}
+		
 		
 		return dict;
 	}

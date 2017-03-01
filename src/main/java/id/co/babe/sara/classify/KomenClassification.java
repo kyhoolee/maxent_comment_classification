@@ -1,5 +1,6 @@
 package id.co.babe.sara.classify;
 
+import id.co.babe.sara.classify.nlp.NorvigSpellCorrector;
 import id.co.babe.sara.filter.DataReader;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
@@ -88,7 +89,8 @@ public class KomenClassification {
 		List<String> goodTrain = new ArrayList<>();
 		for (int i = 0; i < data.train.size(); i++) {
 			Komen k = data.train.get(i);
-			String train_content = k.content;
+			String train_content = NorvigSpellCorrector.correctSentence(k.content, NorvigSpellCorrector.dict); 
+					//k.content;
 			if (k.label == Komen.NORMAL) {
 				goodTrain.add(train_content);
 			}

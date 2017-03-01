@@ -1,5 +1,6 @@
 package id.co.babe.sara.classify;
 
+import id.co.babe.sara.classify.nlp.NorvigSpellCorrector;
 import id.co.babe.sara.filter.TextfileIO;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
@@ -12,6 +13,7 @@ import cc.mallet.classify.Classifier;
 public class ClassifyEstimator {
 	
 	public static void main(String[] args) {
+		//NorvigSpellCorrector.init("nlp_data/indo_dict/id_full.txt");
 		loadAndEstimate("work_data/test_sara.txt", "work_data/test_non_sara_komen.txt", 0.2,0.0, "model_data/maxent_classifier.data");
 	}
 	
@@ -50,7 +52,8 @@ public class ClassifyEstimator {
 
 		for (int i = 0; i < data.test.size(); i++) {
 			Komen k = data.test.get(i);
-			String res = SaraCommentAPI.classify(c, k.content);
+			String test_data = k.content;//NorvigSpellCorrector.correctSentence(k.content, NorvigSpellCorrector.dict);
+			String res = SaraCommentAPI.classify(c, test_data);
 			
 			if (k.label.equals(Komen.SARA) && res.equals(Komen.NORMAL)) {
 				falseNegList.add(k.content);

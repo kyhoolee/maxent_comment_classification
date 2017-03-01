@@ -1,5 +1,6 @@
 package id.co.babe.sara.classify;
 
+import id.co.babe.sara.classify.nlp.NorvigSpellCorrector;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
 
@@ -15,9 +16,9 @@ public class ClassifyBuilder {
 	public static void main(String[] args) {
 		String sara_file = "work_data/242_data/review_sara.txt";
 		String normal_file = "work_data/242_data/review_non.txt";
-		String classifier_file = "model_data/maxent_classifier.data";
-		
-		KomenDataset data = SaraCommentAPI.buildData(sara_file, normal_file, 0.95, 0.95);
+		String classifier_file = "model_data/spell_correct_maxent_classifier.data";
+		NorvigSpellCorrector.init("nlp_data/indo_dict/id_full.txt");
+		KomenDataset data = SaraCommentAPI.buildData(sara_file, normal_file, 0.8, 0.8);
 		Classifier classifier = SaraCommentAPI.buildClassifier(data, classifier_file);
 		validateClassifier(data, classifier);
 		
@@ -48,7 +49,8 @@ public class ClassifyBuilder {
 
 		for (int i = 0; i < data.test.size(); i++) {
 			Komen k = data.test.get(i);
-			Classification cf = c.classify(k.content);
+			String test_data = NorvigSpellCorrector.correctSentence(k.content, NorvigSpellCorrector.dict);
+			Classification cf = c.classify(test_data);
 			Label label = cf.getLabeling().getBestLabel();
 			String res = cf.getLabeling().getBestLabel().toString();
 			double score = cf.getLabeling().value(label);
