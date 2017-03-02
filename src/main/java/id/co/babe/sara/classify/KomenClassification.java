@@ -1,6 +1,5 @@
 package id.co.babe.sara.classify;
 
-import id.co.babe.sara.classify.nlp.NorvigSpellCorrector;
 import id.co.babe.sara.filter.DataReader;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
@@ -15,12 +14,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.MaxEnt;
 import cc.mallet.classify.MaxEntTrainer;
-import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.pipe.CharSequence2TokenSequence;
 import cc.mallet.pipe.FeatureSequence2FeatureVector;
 import cc.mallet.pipe.Pipe;
@@ -30,7 +27,6 @@ import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceLowercase;
 import cc.mallet.pipe.iterator.ArrayIterator;
 import cc.mallet.types.InstanceList;
-import cc.mallet.types.Label;
 
 public class KomenClassification {
 
@@ -89,8 +85,8 @@ public class KomenClassification {
 		List<String> goodTrain = new ArrayList<>();
 		for (int i = 0; i < data.train.size(); i++) {
 			Komen k = data.train.get(i);
-			String train_content = NorvigSpellCorrector.correctSentence(k.content, NorvigSpellCorrector.dict); 
-					//k.content;
+			String train_content = k.content;//NorvigSpellCorrector.correctSentence(k.content, NorvigSpellCorrector.dict); 
+					//
 			if (k.label == Komen.NORMAL) {
 				goodTrain.add(train_content);
 			}
@@ -99,8 +95,10 @@ public class KomenClassification {
 			}
 		}
 		InstanceList instances = new InstanceList(new SerialPipes(new Pipe[] {
-				new Target2Label(), new CharSequence2TokenSequence(),
+				new Target2Label(), 
+				new CharSequence2TokenSequence(),
 				new TokenSequenceLowercase(),
+				//new IndoTokenCorrector(),
 				new IndoTokenRemoveStopwords(),
 				new TokenSequence2FeatureSequence(),
 				new FeatureSequence2FeatureVector()
@@ -142,7 +140,6 @@ public class KomenClassification {
 		
 		KomenDataset data = buildData(bad_file, good_file, train_percent);
 		try {
-			//maxent_classifier.data
 			Classifier c = loadClassifier(new File(classifier_file));
 			estimateClassifier(c, data);
 		} catch (FileNotFoundException e) {

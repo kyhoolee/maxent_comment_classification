@@ -2,9 +2,14 @@ package id.co.babe.sara.filter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import javax.sound.sampled.Line;
 
 import id.co.babe.sara.classify.nlp.NlpRuleFilter;
 import id.co.babe.sara.filter.model.Komen;
@@ -29,8 +34,61 @@ public class DataReader {
     	
     	//ruleFilter("work_data/tr_non_sara_komen.txt", "work_data/false_tr_non_sara_komen.txt", "work_data/true_tr_non_sara_komen.txt");
     	//ruleFilter("work_data/test_non_sara_komen.txt", "work_data/false_test_non_sara_komen.txt", "work_data/true_test_non_sara_komen.txt");
-    	filterKomenTarget("work_data/242_data/sara.txt", "work_data/242_data/review_sara.txt");
-    	filterKomenTarget("work_data/242_data/non.txt", "work_data/242_data/review_non.txt");
+    	//filterKomenTarget("work_data/242_data/sara.txt", "work_data/242_data/review_sara.txt");
+    	//filterKomenTarget("work_data/242_data/non.txt", "work_data/242_data/review_non.txt");
+    	filterWord("/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/done.csv",
+    			"/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/undone.csv",
+    			"/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/review_undone.csv");
+    	
+    }
+    
+    public static Set<String> wordSet(List<String> data) {
+    	Set<String> result = new HashSet<>();
+    	
+    	for(String line : data) {
+    		
+    		String word = line.split(",")[0];
+    		result.add(word);
+    	}
+    	
+    	return result;
+    	
+    }
+    
+    public static Map<String, String> wordMap(List<String> data) {
+    	Map<String, String> result = new HashMap<>();
+    	
+    	for(String line : data) {
+    		
+    		String word = line.split(",")[0];
+    		result.put(word, line);
+    	}
+    	
+    	return result;
+    	
+    }
+    
+    
+    
+    public static void filterWord(String done_file, String undone_file, String review_undone) {
+    	List<String> dones = TextfileIO.readFile(done_file);
+    	List<String> undones = TextfileIO.readFile(undone_file);
+    	
+    	Set<String> done_set = wordSet(dones);
+    	System.out.println(done_set.size());
+    	Map<String, String> undone_map = wordMap(undones);
+    	System.out.println(undone_map.size());
+    	List<String> result = new ArrayList<>();
+    	for(String w : undone_map.keySet()) {
+    		
+    		if(!done_set.contains(w)) {
+    			result.add(undone_map.get(w));
+    		}
+    	}
+    	
+    	System.out.println(result.size());
+    	
+    	TextfileIO.writeFile(review_undone, result);
     	
     }
     

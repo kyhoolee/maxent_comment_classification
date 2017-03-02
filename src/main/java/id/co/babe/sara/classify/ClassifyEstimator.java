@@ -1,6 +1,6 @@
 package id.co.babe.sara.classify;
 
-import id.co.babe.sara.classify.nlp.NorvigSpellCorrector;
+//import id.co.babe.sara.classify.nlp.NorvigSpellCorrector;
 import id.co.babe.sara.filter.TextfileIO;
 import id.co.babe.sara.filter.model.Komen;
 import id.co.babe.sara.filter.model.KomenDataset;
@@ -8,12 +8,15 @@ import id.co.babe.sara.filter.model.KomenDataset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.flakks.spelling.service.SpellApp;
+
 import cc.mallet.classify.Classifier;
 
 public class ClassifyEstimator {
 	
 	public static void main(String[] args) {
 		//NorvigSpellCorrector.init("nlp_data/indo_dict/id_full.txt");
+		//SpellApp.initIndo("nlp_data/indo_dict/id_full.txt");
 		loadAndEstimate("work_data/test_sara.txt", "work_data/test_non_sara_komen.txt", 0.2,0.0, "model_data/maxent_classifier.data");
 	}
 	
