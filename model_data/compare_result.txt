@@ -84,3 +84,40 @@ true_pos: 1366.0 -- true_pos + false_pos: 1532.0
 true_pos: 1366.0 -- false_neg + true_pos: 1697.0
 Precision: 0.891644908616188 -- Recall: 0.8049499116087213
 F-Score: 0.8460823784453391
+
+-----
+Maxent + stopword
+true_pos: 1421.0 -- false_neg: 828.0
+false_pos: 212.0 -- true_neg: 6618.0
+
+true_pos: 1421.0 -- true_pos + false_pos: 1633.0
+true_pos: 1421.0 -- false_neg + true_pos: 2249.0
+Precision: 0.8701775872627067 -- Recall: 0.6318363717207648
+F-Score: 0.7320968572900566
+
+true_neg: 6618.0 -- true_neg + false_neg: 7446.0
+true_neg: 6618.0 -- false_neg + true_pos: 6830.0
+Neg_Precision: 0.8887993553585818 -- Ne_Recall: 0.9689604685212299
+Neg_F-score: 0.9271504623143737
+
+true_pos: 1357.0 -- true_pos + false_pos: 1499.0
+true_pos: 1357.0 -- false_neg + true_pos: 1729.0
+Precision: 0.9052701801200801 -- Recall: 0.7848467322151532
+F-Score: 0.8407682775712515
+
+----
+Maxent + rootword
+true_pos: 1439.0 -- true_pos + false_pos: 1611.0
+true_pos: 1439.0 -- false_neg + true_pos: 2264.0
+Precision: 0.8932340161390441 -- Recall: 0.6356007067137809
+F-Score: 0.7427096774193548
+
+true_neg: 6658.0 -- true_neg + false_neg: 7483.0
+true_neg: 6658.0 -- false_neg + true_pos: 6830.0
+Neg_Precision: 0.8897501002271816 -- Ne_Recall: 0.9748169838945827
+Neg_F-score: 0.9303430447844617
+
+true_pos: 1352.0 -- true_pos + false_pos: 1479.0
+true_pos: 1352.0 -- false_neg + true_pos: 1693.0
+Precision: 0.914131169709263 -- Recall: 0.7985823981098642
+F-Score: 0.8524590163934427

@@ -25,6 +25,7 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceLowercase;
+import cc.mallet.pipe.TokenSequenceNGrams;
 import cc.mallet.pipe.iterator.ArrayIterator;
 import cc.mallet.types.InstanceList;
 
@@ -100,6 +101,7 @@ public class KomenClassification {
 				new TokenSequenceLowercase(),
 				//new IndoTokenCorrector(),
 				new IndoTokenRemoveStopwords(),
+				//new TokenSequenceNGrams(new int[]{1,2}),
 				new TokenSequence2FeatureSequence(),
 				new FeatureSequence2FeatureVector()
 		}));

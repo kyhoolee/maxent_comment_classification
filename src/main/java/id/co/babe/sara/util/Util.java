@@ -6,6 +6,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Util {
+	
+	
+	
+	
 
 	public static void printList(List<?> data) {
 		for (int i = 0; i < data.size(); i++) {
@@ -159,6 +163,37 @@ public class Util {
 
 		return (countLetter >= 1 && countNumber >= 1);
 	}
+	
+	public static String replaceWord(String origin, String replace, String input) {
+		String result = " " + input.toLowerCase() + " ";
+		result = result.replace("\t", " ");
+		result = result.replace(" " + origin + " ", " " + replace + " ");
+		
+		result = result.substring(1, result.length() - 1);
+		System.out.println(result);
+		result = merge(input, result);
+		System.out.println(result);
+		return result;
+	}
+	
+	public static String merge(String origin, String output) {
+		String result = "";
+		if(origin.length() != output.length())
+			return output;
+		
+		for(int i = 0 ; i < origin.length() ; i ++) {
+			String c = origin.substring(i, i+1);
+			String o = output.substring(i, i+1);
+			if(c.toLowerCase().equals(o.toLowerCase())) {
+				result += c;
+			} else {
+				result += o;
+			}
+			
+		}
+		
+		return result;
+	}
 
 	public static void main(String[] args) {
 		// bbPin("di mana belinya ? apa i u add 7 cdb7a35 adult only");
@@ -172,6 +207,8 @@ public class Util {
 		
 		//System.out.println(isLetterNumber("5e 69 44 67"));
 		//bbPin("V.1.A.G.R.A USA O.B.A.T K.U.A.T PATEN\n\n          ASLI ORIGINAL IMPORT\n\nO.B.A.T K.U.A.T NO 1\n\nMGATASI DIABET- KENCANG.T.LAMA\nTlp:0.81.2.28.4.49.4.99/pin:D18A5778 ※ VI@GRA USA,KLG USA,CIALIS\n※ PEMUTIH WAJAH/BADAN \n※ ALAT BANTU P/W DLL..");
-		bbPin("PEMBESAR PAYUDARA\nPIN.D2E22009");
+		//bbPin("PEMBESAR PAYUDARA\nPIN.D2E22009");
+		
+		replaceWord("lon", "***", "Long Lon\t ngon Lon");
 	}
 }

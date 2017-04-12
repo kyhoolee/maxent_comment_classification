@@ -465,7 +465,35 @@ public class NlpRuleFilter {
 	 * @param input
 	 * @return
 	 */
+	
+	public static boolean checkDict(String input) {
+		boolean result = 
+				checkDict(input, pejoratives) ||
+				checkDict(input, profanities) ||
+				checkDict(input, obscenities) ||
+				checkDict(input, offensive) ||
+				checkDict(input, provocatives) ||
+				checkDict(input, subject) || checkDict(input, adjective) || checkDict(input, adverb) ;
+		
+		
+		return result;
+				
+	}
+	
 	public static String ruleInference(String input) {
+		String result = Komen.PROBABLE;
+		boolean is_sara = checkDict(input, new String[]{"ahoax"});
+				
+		if(is_sara) {
+			result = Komen.SARA;
+		} else {
+			result = Komen.NORMAL;
+		}
+		
+		return result;
+	}
+	
+	public static String pairInference(String input) {
 		String result = Komen.PROBABLE;
 		
 		
@@ -515,6 +543,8 @@ public class NlpRuleFilter {
 		
 		return result;
 	}
+	
+	
 	
 	public static boolean checkDict(String input, String[] dict) {
 		boolean result = false;

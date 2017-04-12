@@ -254,6 +254,8 @@ public class SaraCommentAPI {
 		System.out.println("Precision: " + precision + " -- Recall: " + recall);
 		double f_score = 2 * precision * recall / (precision + recall);
 		System.out.println("F-Score: " + f_score);
+		double accuracy = (true_pos + true_neg) * 1.0 / (true_pos + true_neg + false_pos + false_neg);
+		System.out.println("Accuracy: " + accuracy);
 		
 		
 		

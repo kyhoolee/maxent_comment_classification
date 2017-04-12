@@ -179,13 +179,36 @@ public class TextfileIO {
 		return result;
 	}
 	
+	public static void appendFile(String filePath, List<String> data) {
+		BufferedWriter bw = null;
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(filePath, true);
+			bw = new BufferedWriter(fw);
+			
+			for(int i = 0 ; i < data.size() ; i ++) {
+				bw.write(data.get(i));
+				bw.newLine();
+			}
+			System.out.println("Done");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (bw != null)
+					bw.close();
+				if (fw != null)
+					fw.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	
 	public static void writeFile(String filePath, List<String> data) {
 		BufferedWriter bw = null;
 		FileWriter fw = null;
-
 		try {
-
-
 			fw = new FileWriter(filePath);
 			bw = new BufferedWriter(fw);
 			
@@ -193,31 +216,19 @@ public class TextfileIO {
 				bw.write(data.get(i));
 				bw.newLine();
 			}
-
 			System.out.println("Done");
-
 		} catch (IOException e) {
-
 			e.printStackTrace();
-
 		} finally {
-
 			try {
-
 				if (bw != null)
 					bw.close();
-
 				if (fw != null)
 					fw.close();
-
 			} catch (IOException ex) {
-
 				ex.printStackTrace();
-
 			}
-
 		}
-
 	}
 
 }

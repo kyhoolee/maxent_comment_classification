@@ -16,8 +16,9 @@ public class ClassifyEstimator {
 	
 	public static void main(String[] args) {
 		//NorvigSpellCorrector.init("nlp_data/indo_dict/id_full.txt");
-		//SpellApp.initIndo("nlp_data/indo_dict/id_full.txt");
-		loadAndEstimate("work_data/test_sara.txt", "work_data/test_non_sara_komen.txt", 0.2,0.0, "model_data/maxent_classifier.data");
+		//SpellApp.initIndo("nlp_data/indo_dict/id_full.txt", "nlp_data/indo_dict/root_dict.csv");
+		loadAndEstimate("work_data/test_sara.txt", "work_data/test_non_sara_komen.txt", 0.2,0.0, "model_data/db_maxent_classifier.31.3.data");
+		//loadAndEstimate("work_data/db_data/sara.txt", "work_data/db_data/normal.txt", 0.0,0.0, "model_data/db_maxent_classifier.data");
 	}
 	
 	public static void loadAndEstimate(String sara_file, String normal_file,

@@ -389,9 +389,9 @@ public class WordTokenizer {
 	
 	public static List<String> getStopWords() {
 		List<String> data = new ArrayList<String>();
-		//TextfileIO.readFile(Thread.currentThread().getContextClassLoader().getResourceAsStream(STOPWORD_PATH));
-		for(int i = 0 ; i < stop_list.length ; i ++)
-			data.add(stop_list[i]);
+		data = TextfileIO.readFile(Thread.currentThread().getContextClassLoader().getResourceAsStream(STOPWORD_PATH));
+//		for(int i = 0 ; i < stop_list.length ; i ++)
+//			data.add(stop_list[i]);
 		return data;
 	}
 	

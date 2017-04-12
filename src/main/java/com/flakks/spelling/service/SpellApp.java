@@ -1,5 +1,8 @@
 package com.flakks.spelling.service;
 
+import id.co.babe.sara.filter.DataReader;
+import id.co.babe.sara.filter.TextfileIO;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -23,7 +26,12 @@ import com.flakks.spelling.TrieNode;
 public class SpellApp {
 	public static Map<String, Dictionary> dictionaries;
 	public static Map<String, TrieNode> trieNodes;
+	public static Map<String, String> indoRootDict;
 
+	public static void initIndo(String indo_dict_path, String root_indo_dict) {
+		initIndo(indo_dict_path);
+		initRootIndo(root_indo_dict);
+	}
 	public static void initIndo(String indo_dict_path) {
 		List<String> lines = new ArrayList<String>();
 
@@ -35,6 +43,16 @@ public class SpellApp {
 
 		dictionaries = createIndoDictionary(lines);
 		trieNodes = createTrieNodes(dictionaries);
+	}
+	
+	public static void initRootIndo(String root_indo_dict) {
+		indoRootDict = new HashMap<String, String>();
+		
+		List<String> lines = TextfileIO.readFile(root_indo_dict);
+		for(String line : lines) {
+			List<String> tokens = DataReader.parseLine(line);
+			indoRootDict.put(tokens.get(0), tokens.get(1));
+		}
 	}
 
 	public static Map<String, Dictionary> createIndoDictionary(
@@ -113,6 +131,16 @@ public class SpellApp {
 	
 	
 	public static String indoCorrect(String word) {
+		String result = word;
+		
+		if(indoRootDict.containsKey(word)) {
+			return indoRootDict.get(word);
+		}
+		
+		return result;
+	}
+	
+	public static String indoTrieCorrect(String word) {
 		long time = System.currentTimeMillis();
 		String locale = "id";
 		String query = word.toLowerCase();

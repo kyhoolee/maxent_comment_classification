@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
-import javax.sound.sampled.Line;
 
 import id.co.babe.sara.classify.nlp.NlpRuleFilter;
 import id.co.babe.sara.filter.model.Komen;
@@ -36,10 +35,60 @@ public class DataReader {
     	//ruleFilter("work_data/test_non_sara_komen.txt", "work_data/false_test_non_sara_komen.txt", "work_data/true_test_non_sara_komen.txt");
     	//filterKomenTarget("work_data/242_data/sara.txt", "work_data/242_data/review_sara.txt");
     	//filterKomenTarget("work_data/242_data/non.txt", "work_data/242_data/review_non.txt");
-    	filterWord("/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/done.csv",
-    			"/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/undone.csv",
-    			"/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/review_undone.csv");
+//    	filterWord("/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/done.csv",
+//    			"/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/undone.csv",
+//    			"/home/mainspring/tutorial/learn/text-classifier/spell_correction/data/review_undone.csv");
+    	readRootDict("nlp_data/indo_dict/comment_dict.csv", "nlp_data/indo_dict/root_dict.csv");
     	
+    }
+    
+    public static void readStopDict(String path, String stop_path) {
+    	List<String> lines = TextfileIO.readFile(path);
+    	List<String> stops = new ArrayList<>();
+    	for(String line : lines) {
+    		List<String> tokens = parseLine(line);
+//    		String r = "";
+//    		for(String t : tokens) {
+//    			r = r + " -- " + t;
+//    		}
+//    		System.out.println(r);
+    		String is_stop = tokens.get(3);
+    		if(is_stop.equals("0"))
+    			stops.add(tokens.get(0));
+    		
+    	}
+    	
+    	TextfileIO.writeFile(stop_path, stops);
+    }
+    
+    public static void readRootDict(String path, String root_path) {
+    	List<String> lines = TextfileIO.readFile(path);
+    	List<String> rootList = new ArrayList<>();
+    	for(String line : lines) {
+    		List<String> tokens = parseLine(line);
+//    		String r = "";
+//    		for(String t : tokens) {
+//    			r = r + " -- " + t;
+//    		}
+//    		System.out.println(r);
+    		String is_stop = tokens.get(3);
+    		if(!is_stop.equals("0")) {
+    			//root.add(tokens.get(0));
+    			String word = tokens.get(0);
+    			String correct = tokens.get(3);
+    			String root = tokens.get(2);
+    			if(root!=null && !root.isEmpty()) {
+    				rootList.add(word+","+root);
+    			} else if(correct != null && !correct.isEmpty()) {
+    				rootList.add(word+","+correct);
+    			} else {
+    				rootList.add(word+","+word);
+    			}
+    		}
+    		
+    	}
+    	
+    	TextfileIO.writeFile(root_path, rootList);
     }
     
     public static Set<String> wordSet(List<String> data) {
