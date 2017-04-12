@@ -12,6 +12,7 @@ import java.util.Map;
 
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
+import cc.mallet.types.Alphabet;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.Label;
 import cc.mallet.types.Labeling;
@@ -57,13 +58,31 @@ public class SaraCommentAPI {
 		return data;
 	}
 
-
+	
 	/**
 	 * Load classifier from file
 	 * @param classifier_path
 	 * @return
 	 */
 	public static Classifier loadClassifier(String classifier_path) {
+		Classifier classifier = null;
+
+		try {
+			classifier = KomenClassification.loadClassifier(new File(classifier_path));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return classifier;
+	}
+
+	/**
+	 * Load classifier from file
+	 * @param classifier_path
+	 * @return
+	 */
+	public static Classifier loadFixedDictClassifier(String classifier_path) {
 		Classifier classifier = null;
 
 		try {
@@ -80,6 +99,22 @@ public class SaraCommentAPI {
 		
 		return classifier;
 	}
+	
+	public static void stopGrowDict(Classifier classifier, int stopSize) {
+		try {
+			
+			Alphabet dict = classifier.getAlphabet();
+			if(dict != null) {
+				if(dict.size() > stopSize)
+					dict.stopGrowth();
+			}
+			System.out.println("Stop growth dictionary");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	
 
