@@ -68,6 +68,12 @@ public class SaraCommentAPI {
 
 		try {
 			classifier = KomenClassification.loadClassifier(new File(classifier_path));
+			try {
+				classifier.getAlphabet().stopGrowth();
+				System.out.println("Stop growth dictionary");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
