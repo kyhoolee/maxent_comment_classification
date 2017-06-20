@@ -44,8 +44,8 @@ public class CommentClient {
 	}
 	
 	public static void writeData() {
-		List<String> data = getNewCommentsByDate(normal, "2017-03-31", "2017-03-27");
-		TextfileIO.appendFile("work_data/db_data/normal_train.31.3.txt", data); // 13358
+		List<String> data = getNewCommentsByDate(spam, "2017-05-11", "2017-05-01");
+		TextfileIO.writeFile("work_data/db_data/spam.11.5.txt", data); // 13358
 	}
 	
 	public static void summary() {
@@ -340,6 +340,20 @@ public class CommentClient {
 		return result;
 	}
 	
+	public static List<String> getUpdateCommentsByDate(int origin, int update, String bigDate, String smallDate) {
+	      
+		String sql = "select *, from_base64(content) ct " 
+				+ "from tbl_comment_changelog inner join sasha_article_comment on "
+				+ " tbl_comment_changelog.id = sasha_article_comment.id "
+				+ " where original_sts = " + origin + " and new_sts = " + update
+				+ " and date(tbl_comment_changelog.created) <= '" + bigDate + "' "
+				+ " and date(tbl_comment_changelog.created) > '" + smallDate + "' "
+				+ " order by tbl_comment_changelog.id desc ; ";
+		
+		List<String> result = getComments(sql);
+		return result;
+	}
+	
 	public static List<String> getNewCommentsByDay(int update, int previousDay, int range) {
 	      
 		String sql = "select *, from_base64(content) ct " 
@@ -437,7 +451,7 @@ public class CommentClient {
 				Timestamp created = rs.getTimestamp("tbl_comment_changelog.created");
 
 				if(content != null && !content.isEmpty()) {
-					content = content.replace("\n", "\t").replace("\r", "");
+					content = content.replace("\n", "\t").replace("\r", ""); // created.toString() + " : " + 
 					result.add(content);
 					System.out.println(created + " -- " + content);
 				}

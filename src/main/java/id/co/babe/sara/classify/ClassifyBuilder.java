@@ -15,13 +15,13 @@ import cc.mallet.types.Label;
 public class ClassifyBuilder {
 	
 	public static void main(String[] args) {
-		String sara_file = "work_data/db_train/sara_train.31.3.txt";
+		String sara_file = "work_data/db_train/sara_train.11.4.draft.txt";
 				//"work_data/en_data/rt-polarity.pos";
 				//"work_data/242_data/review_sara.txt";
-		String normal_file = "work_data/db_train/normal_train.31.3.txt";
+		String normal_file = "work_data/db_train/normal_train.11.4.draft.txt";
 				//"work_data/en_data/rt-polarity.neg";
 				//"work_data/242_data/review_non.txt";
-		String classifier_file = "model_data/db_maxent_classifier.31.3.data";
+		String classifier_file = "model_data/db_maxent_classifier.11.4.draft.data";
 		//System.out.println("init spell");
 		//SpellApp.initIndo("nlp_data/indo_dict/id_full.txt", "nlp_data/indo_dict/root_dict.csv");
 		System.out.println("init data");
